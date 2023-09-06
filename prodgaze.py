@@ -62,6 +62,7 @@ class KeyboardTracker(Tracker):
         super().__init__(filename, lock, interval_seconds)
         self.keys_pressed = 0
         self.metric = 'keys_pressed'
+        self.listener = None
 
     def on_press(self, key):
         self.keys_pressed += 1
@@ -71,14 +72,18 @@ class KeyboardTracker(Tracker):
             
     def keyboard_listener(self):
         with keyboard.Listener(on_press=self.on_press) as listener:
+            self.listener = listener
             listener.join()
             
     def setup(self):
-        keyboard_thread = threading.Thread(target=self.keyboard_listener)
-        keyboard_thread.start()
+        self.keyboard_thread = threading.Thread(target=self.keyboard_listener)
+        self.keyboard_thread.start()
     
     def teardown(self):
-        pass
+        if self.listener is not None:
+            self.listener.stop()
+        if self.keyboard_thread is not None:
+            self.keyboard_thread.join()
 
 # Initialize file lock and trackers
 lock = threading.Lock()
@@ -92,5 +97,9 @@ keyboard_thread = threading.Thread(target=keyboard_tracker.start)
 user_present_thread.start()
 keyboard_thread.start()
 
-user_present_thread.join()
-keyboard_thread.join()
+try:
+    user_present_thread.join()
+    keyboard_thread.join()
+except KeyboardInterrupt:
+    user_present_tracker.teardown()
+    keyboard_tracker.teardown()
