@@ -1,0 +1,53 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #111;
+    color: #7FFF00;
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dashboard {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin: 20px 0;
+}
+
+.card {
+    background-color: #333;
+    padding: 20px;
+    border: 1px solid #7FFF00;
+    border-radius: 5px;
+    width: 45%;
+    text-align: center;
+}
+
+.card p {
+    font-size: 24px;
+}
+
+.charts-container {
+    display: flex; /* makes sure charts are in a row */
+    justify-content: space-between; /* space them out */
+    width: 100%;
+}
+
+.chart-container {
+    width: 250px;  /* static width */
+    height: 250px; /* static height, making it square */
+    margin: 10px; 
+    border: 1px solid #7FFF00;
+    position: relative; /* make sure this container constrains the plot */
+}
+
+#duration_at_computer, #keys_pressed {
+    width: 100%;  /* let the charts take up the full width of their parent */
+    height: 100%; /* and the full height */
+}

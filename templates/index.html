@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Tracker Metrics</title>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+        
+    </head>
+<body>
+
+    <!-- Dashboard cards -->
+<div class="dashboard">
+    <div class="card">
+        <h2>Hours at Computer</h2>
+        <p id="hours_at_computer">Loading...</p>
+    </div>
+    <div class="card">
+        <h2>Keys Pressed Today</h2>
+        <p id="keys_pressed_today">Loading...</p>
+    </div>
+</div>
+
+<!-- Place for the graphs -->
+<div class="charts-container"> 
+    <div class="chart-container"><div id="combined_plots"></div></div>
+</div>
+
+
+
+<script>
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    var dataTable = [];
+
+    socket.on('connect', function() {
+        console.log('Connected to the server');
+        socket.emit('request_data_sync');
+    });
+
+    socket.on('update_data', function(metrics) {
+        updateWorker.postMessage({ type: 'update_data', data: metrics });
+    });
+
+    socket.on('new_data_inserted', function(new_data) {
+        updateWorker.postMessage({ type: 'new_data_inserted', data: new_data });
+    });
+
+    // Create Web Worker
+    var updateWorker = new Worker('/static/updateWorker.js');
+
+    updateWorker.onmessage = function(event) {
+        if (event.data.type === 'plot') {
+    
+            let { durationPlotData, keysPlotData } = event.data;
+
+            console.log(durationPlotData);
+            console.log(keysPlotData);
+
+    
+            for (let i = 0; i < durationPlotData.length; i++) {
+                durationPlotData[i].type = 'bar';
+                durationPlotData[i].xaxis = 'x1';  // Added
+                durationPlotData[i].yaxis = 'y1';  // Added
+                durationPlotData[i].marker = {
+                    color: '#7FFF00'
+                };
+            }
+            
+            for (let i = 0; i < keysPlotData.length; i++) {
+                keysPlotData[i].xaxis = 'x2';  // Added
+                keysPlotData[i].yaxis = 'y2';  // Added
+            }
+    
+            // Combine the data for the grid
+            let combinedData = [...durationPlotData, ...keysPlotData];
+    
+            // Use a grid in the layout
+            const combinedLayout = {
+                ...layoutAdjustments,
+                grid: {
+                    rows: 1,
+                    columns: 2,
+                    pattern: 'independent'
+                },
+                // Add additional x and y axis configurations
+                xaxis2: { ...layoutAdjustments.xaxis },
+                yaxis2: { ...layoutAdjustments.yaxis },
+                title: null  // Remove the title if necessary
+            };
+    
+            // Update the graph
+            Plotly.newPlot('combined_plots', combinedData, combinedLayout);
+    
+            // Your calculations for totals, etc. can remain the same
+            let totalHours = durationPlotData[0].y.reduce((acc, curr) => acc + curr, 0) / 3600;
+            let totalKeysPressed = keysPlotData[0].y.reduce((acc, curr) => acc + curr, 0);
+            document.getElementById("hours_at_computer").innerText = totalHours.toFixed(2) + ' hours';
+            document.getElementById("keys_pressed_today").innerText = totalKeysPressed;
+        }
+    };
+    
+
+    const layoutAdjustments = {
+        height: 300,
+        margin: {
+            l: 50,  // Adjust as required
+            r: 30,
+            b: 30,
+            t: 30,
+            pad: 4
+        },
+        xaxis: {
+            tickvals: Array.from({length: 24}, (_, i) => i),
+            ticktext: Array.from({length: 24}, (_, i) => i),
+            gridcolor: '#333',
+            tickcolor: '#7FFF00',
+            tickfont: {
+                color: '#7FFF00'
+            }
+        },
+        yaxis: {
+            gridcolor: '#333',
+            tickcolor: '#7FFF00',
+            tickfont: {
+                color: '#7FFF00'
+            }
+        },
+        plot_bgcolor: '#111',
+        paper_bgcolor: '#111',
+        font: {
+            color: '#7FFF00'
+        },
+        barmode: 'group'  // bars grouped together based on x values
+    };
+
+    // Initial fetch and plot
+    socket.emit('request_data_sync');  // Request initial data sync on page load
+
+</script>
+
+</body>
+</html>

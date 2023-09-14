@@ -1,1 +1,4 @@
 pynput
+sqlite3
+plotly
+flask_socketio
