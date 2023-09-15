@@ -43,9 +43,9 @@ def insert_metric(metric, value, unit="seconds"):
     }
     socketio.emit('new_data_inserted', new_data)
 
-def fetch_all_metrics():
+def fetch_all_metrics(timestamp=datetime.now().strftime('%Y-%m-%d 00:00:00')):
     conn = sqlite3.connect(DB_NAME)
-    query = "SELECT timestamp, metric, value, unit FROM metrics"
+    query = f"SELECT timestamp, metric, value, unit FROM metrics WHERE timestamp > '{timestamp}'"
     df = pd.read_sql(query, conn)
     conn.close()
     return df
