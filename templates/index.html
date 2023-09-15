@@ -52,10 +52,6 @@
         if (event.data.type === 'plot') {
     
             let { durationPlotData, keysPlotData } = event.data;
-
-            console.log(durationPlotData);
-            console.log(keysPlotData);
-
     
             for (let i = 0; i < durationPlotData.length; i++) {
                 durationPlotData[i].type = 'bar';
@@ -64,11 +60,13 @@
                 durationPlotData[i].marker = {
                     color: '#7FFF00'
                 };
+                durationPlotData[i].name = 'duration at computer';
             }
             
             for (let i = 0; i < keysPlotData.length; i++) {
                 keysPlotData[i].xaxis = 'x2';  // Added
                 keysPlotData[i].yaxis = 'y2';  // Added
+                keysPlotData[i].name = 'keys pressed';
             }
     
             // Combine the data for the grid
