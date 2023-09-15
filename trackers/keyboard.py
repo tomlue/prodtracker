@@ -12,6 +12,7 @@ class InputTracker(Tracker):
         self.mouse_listener = None
         self.keyboard_thread = None
         self.mouse_thread = None
+        self.metric = 'keys_pressed'
 
     def on_key_press(self, key):
         self.keys_pressed += 1
@@ -25,7 +26,7 @@ class InputTracker(Tracker):
         newclicks = self.clicks
         self.keys_pressed = 0
         self.clicks = 0
-        return {"keys_pressed": newpressed, "mouse_clicks": newclicks}
+        return (self.metric, newpressed + newclicks)
 
     def keyboard_listener_func(self):
         with keyboard.Listener(on_press=self.on_key_press) as listener:

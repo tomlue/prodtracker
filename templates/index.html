@@ -81,7 +81,7 @@
                     pattern: 'independent'
                 },
                 // Add additional x and y axis configurations
-                xaxis2: { ...layoutAdjustments.xaxis },
+                xaxis2: { ...layoutAdjustments.xaxis, yaxis: {range: [0, 3600] } },
                 yaxis2: { ...layoutAdjustments.yaxis },
                 title: null  // Remove the title if necessary
             };
@@ -121,7 +121,8 @@
             tickcolor: '#7FFF00',
             tickfont: {
                 color: '#7FFF00'
-            }
+            },
+            range: [0, 3600]
         },
         plot_bgcolor: '#111',
         paper_bgcolor: '#111',

@@ -1,2 +1,2 @@
 from .camera import UserPresentTracker
-from .keyboard import KeyboardTracker
+from .keyboard import InputTracker
