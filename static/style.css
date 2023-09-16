@@ -16,16 +16,22 @@ body {
 .dashboard {
     display: flex;
     justify-content: space-between;
-    width: 90%;
-    margin: 20px 0;
+    flex-direction: row;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+h2 {
+    margin-top: 0;
+    color: white;
 }
 
 .card {
-    background-color: #333;
-    padding: 20px;
-    border: 1px solid #7FFF00;
+    border: 1px solid #e0e0e0;
     border-radius: 5px;
-    width: 45%;
+    padding: 1rem;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    width: calc(50% - 0.5rem); /* consider gap in width */
     text-align: center;
 }
 
@@ -34,14 +40,14 @@ body {
 }
 
 .charts-container {
+    width: 100%;
     display: flex; /* makes sure charts are in a row */
     justify-content: space-between; /* space them out */
     width: 100%;
 }
 
 .chart-container {
-    width: 250px;  /* static width */
-    height: 250px; /* static height, making it square */
+    width: 100%;
     margin: 10px; 
     border: 1px solid #7FFF00;
     position: relative; /* make sure this container constrains the plot */
