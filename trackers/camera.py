@@ -3,7 +3,7 @@ import cv2
 
 class UserPresentTracker(Tracker):
     
-    def __init__(self, interval_seconds=0.5):
+    def __init__(self, interval_seconds=1):
         super().__init__(interval_seconds)
         self.cap = cv2.VideoCapture(0)
         self.face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')

@@ -4,7 +4,7 @@ import threading
 
 class InputTracker(Tracker):
 
-    def __init__(self, interval_seconds=0.5):
+    def __init__(self, interval_seconds=1.0):
         super().__init__(interval_seconds)
         self.keys_pressed = 0
         self.clicks = 0

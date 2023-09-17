@@ -12,11 +12,11 @@
     <!-- Dashboard cards -->
 <div class="dashboard">
     <div class="card">
-        <h2>Hours at Computer</h2>
-        <p id="hours_at_computer">Loading...</p>
+        <h2>Duration</h2>
+        <p id="hours_at_computer" data-duration="0" data-missed="0">Loading...</p>
     </div>
     <div class="card">
-        <h2>Keys Pressed Today</h2>
+        <h2>Keys Pressed</h2>
         <p id="keys_pressed_today">Loading...</p>
     </div>
 </div>
@@ -92,7 +92,27 @@
             // Your calculations for totals, etc. can remain the same
             let totalHours = durationPlotData[0].y.reduce((acc, curr) => acc + curr, 0) / 3600;
             let totalKeysPressed = keysPlotData[0].y.reduce((acc, curr) => acc + curr, 0);
-            document.getElementById("hours_at_computer").innerText = totalHours.toFixed(6) + ' hours';
+
+            // TODO need a better card updating system
+            
+            // update hours at computer
+            let hoursElem = document.getElementById("hours_at_computer");
+            let curhoursValue = parseFloat(hoursElem.getAttribute("data-duration"));
+            let missedValue = parseFloat(hoursElem.getAttribute("data-missed"));
+
+            if (curhoursValue < totalHours) {
+                hoursElem.parentElement.classList.add('active');  // Adds 'active' class to the card
+                hoursElem.setAttribute("data-missed", 0);
+            } else if (missedValue > 3){
+                hoursElem.parentElement.classList.remove('active');  // Removes 'active' class if it's the same
+            } else {
+                hoursElem.setAttribute("data-missed", missedValue + 1);
+            }
+            
+            hoursElem.setAttribute("data-duration", totalHours);
+            hoursElem.innerText = totalHours.toFixed(3) + ' hours';
+
+            // update keys pressed
             document.getElementById("keys_pressed_today").innerText = totalKeysPressed;
         }
     };

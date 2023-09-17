@@ -35,6 +35,10 @@ h2 {
     text-align: center;
 }
 
+.card.active {
+    border-color: greenyellow;
+}
+
 .card p {
     font-size: 24px;
 }
