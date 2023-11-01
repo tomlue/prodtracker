@@ -15,10 +15,10 @@ body {
 
 .dashboard {
     display: flex;
-    justify-content: space-between;
     flex-direction: row;
     gap: 1rem;
     padding: 1rem;
+    width:100%;
 }
 
 h2 {
@@ -39,8 +39,13 @@ h2 {
     border-color: greenyellow;
 }
 
+.card h2 {
+    margin-bottom: 0.5rem;
+    font-size: 3rem;
+}
+
 .card p {
-    font-size: 24px;
+    font-size: 2.5rem;
 }
 
 .charts-container {
