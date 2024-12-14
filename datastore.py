@@ -45,7 +45,8 @@ def insert_metric(metric, value, unit="seconds"):
 
 def fetch_all_metrics(timestamp=datetime.now().strftime('%Y-%m-%d 00:00:00')):
     conn = sqlite3.connect(DB_NAME)
-    query = f"SELECT timestamp, metric, value, unit FROM metrics WHERE timestamp > '{timestamp}'"
+    end_timestamp = datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d 23:59:59')
+    query = f"SELECT timestamp, metric, value, unit FROM metrics WHERE timestamp > '{timestamp}' AND timestamp < '{end_timestamp}'"
     df = pd.read_sql(query, conn)
     conn.close()
     return df

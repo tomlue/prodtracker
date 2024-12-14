@@ -10,6 +10,13 @@
 </head>
 <body>
 
+    <!-- Add after <body> and before dashboard div -->
+    <div class="date-navigation">
+        <button id="prev-date">←</button>
+        <h1 id="current-date">Today</h1>
+        <button id="next-date">→</button>
+    </div>
+
     <!-- Dashboard cards -->
 <div class="dashboard">
     <div class="card">
@@ -31,6 +38,33 @@
 
 <script>
     var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    let currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    function updateDateDisplay() {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').textContent = currentDate.toLocaleDateString(undefined, options);
+    }
+
+    function changeDate(days) {
+        currentDate.setDate(currentDate.getDate() + days);
+        updateDateDisplay();
+        socket.emit('request_data_sync', { date: currentDate.toISOString() });
+    }
+
+    // Event listeners for buttons
+    document.getElementById('prev-date').addEventListener('click', () => changeDate(-1));
+    document.getElementById('next-date').addEventListener('click', () => changeDate(1));
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') changeDate(-1);
+        if (e.key === 'ArrowRight') changeDate(1);
+    });
+
+    // Initial date display
+    updateDateDisplay();
 
     socket.on('connect', function() {
         console.log('Connected to the server');

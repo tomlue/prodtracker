@@ -42,8 +42,12 @@ def handle_disconnect():
     print('Client disconnected')
 
 @socketio.on('request_data_sync')
-def handle_request_data_sync():
-    metrics = fetch_all_metrics().to_dict(orient='records')
+def handle_request_data_sync(data=None):
+    if data and 'date' in data:
+        date_str = data['date'][:10]  # Get YYYY-MM-DD part
+        metrics = fetch_all_metrics(f"{date_str} 00:00:00").to_dict(orient='records')
+    else:
+        metrics = fetch_all_metrics().to_dict(orient='records')
     emit('update_data', metrics)
 
 

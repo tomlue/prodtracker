@@ -66,3 +66,34 @@ h2 {
     width: 100%;  /* let the charts take up the full width of their parent */
     height: 100%; /* and the full height */
 }
+
+.date-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    width: 100%;
+}
+
+.date-navigation button {
+    background: #111;
+    color: #7FFF00;
+    border: 1px solid #7FFF00;
+    padding: 0.5rem 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.date-navigation button:hover {
+    background: #7FFF00;
+    color: #111;
+}
+
+.date-navigation h1 {
+    font-size: 2rem;
+    margin: 0;
+    min-width: 200px;
+    text-align: center;
+}

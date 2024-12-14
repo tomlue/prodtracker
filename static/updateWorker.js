@@ -1,16 +1,15 @@
 var dataTable = [];
 
 self.onmessage = function(event) {
-
-    let startOfToday = new Date();
-    startOfToday.setHours(0, 0, 0, 0);
-
-    dataTable = dataTable.filter(item => new Date(item.timestamp) >= startOfToday);
-
     if (event.data.type === 'update_data') {
-        dataTable = event.data.data; 
+        dataTable = event.data.data;
     } else if (event.data.type === 'new_data_inserted') {
-        dataTable.push(event.data.data);
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+        let dataDate = new Date(event.data.data.timestamp);
+        if (dataDate >= today) {
+            dataTable.push(event.data.data);
+        }
     }
     
     // Aggregation helper function
