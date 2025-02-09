@@ -1,5 +1,6 @@
 from .tracker import Tracker
 import cv2
+import structlog
 
 class UserPresentTracker(Tracker):
 
@@ -17,6 +18,7 @@ class UserPresentTracker(Tracker):
         prototxt_path = 'resources/deploy.prototxt'
         caffemodel_path = 'resources/res10_300x300_ssd_iter_140000.caffemodel'
         self.net = cv2.dnn.readNetFromCaffe(prototxt_path, caffemodel_path)
+        self.log = structlog.get_logger().bind(tracker=self.__class__.__name__)
 
     def initialize_camera(self):
         # List of camera devices to try if the given one fails
@@ -60,6 +62,13 @@ class UserPresentTracker(Tracker):
             if confidence > 0.5:  # Confidence threshold
                 faces += 1
 
-        print(f'There are {faces} faces')
+        self.log.info(f'There are {faces} faces')
         duration = self.interval_seconds if faces != 0 else 0
         return (self.metric, duration)
+    
+    def setup(self):
+        pass
+    
+    def teardown(self):
+        if self.cap:
+            self.cap.release()

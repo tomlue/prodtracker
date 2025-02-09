@@ -5,7 +5,7 @@ from flask_socketio import emit
 import plotly.express as px
 import json
 
-from trackers import UserPresentTracker, InputTracker
+from trackers import UserPresentTracker, InputTracker, ActiveWindowTracker
 from config import socketio
 
 def create_app():
@@ -16,13 +16,16 @@ def create_app():
     # Initialize trackers
     user_present_tracker = UserPresentTracker()
     keyboard_tracker = InputTracker()
+    window_tracker = ActiveWindowTracker()
 
     # Start tracking in separate threads
     user_present_thread = threading.Thread(target=user_present_tracker.start)
     keyboard_thread = threading.Thread(target=keyboard_tracker.start)
-
+    window_thread = threading.Thread(target=window_tracker.start)
+    
     user_present_thread.start()
     keyboard_thread.start()
+    window_thread.start()
     
     return Flask(__name__, static_folder='static', template_folder='templates')
 

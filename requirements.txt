@@ -5,3 +5,7 @@ pandas==2.2.2
 opencv-python==4.10.0.84
 opencv-python-headless==4.10.0.84
 pygetwindow
+pychromedevtools==1.0.3
+python-dotenv==1.0.1
+openai==1.58.1
+structlog==24.4.0

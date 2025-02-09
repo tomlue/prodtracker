@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 import cv2
 import time
 from pynput import keyboard
@@ -5,11 +6,12 @@ from datetime import datetime
 import threading
 from datastore import insert_metric
 
-class Tracker:
+class Tracker(ABC):
     
     def __init__(self, interval_seconds=0.5):
         self.interval_seconds = interval_seconds
     
+    @abstractmethod
     def update_metrics(self):
         "return a tuple of (metric, value)"
         pass
@@ -18,10 +20,12 @@ class Tracker:
         metric, value = self.update_metrics()
         insert_metric(metric, value)
     
+    @abstractmethod
     def setup(self):
         "setup the tracker"
         pass
     
+    @abstractmethod
     def teardown(self):
         "teardown the tracker"
         pass
